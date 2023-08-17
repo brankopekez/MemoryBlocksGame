@@ -9,7 +9,8 @@ import java.util.List;
 public class MemoryBlocksGame {
     private JFrame frame;
     private JPanel gridPanel;
-    private MemoryBlock flippedBlock;
+    private MemoryBlock last;
+    private MemoryBlock nextToTheLast;
     private List<MemoryBlock> blocks;
 
     public MemoryBlocksGame() {
@@ -35,31 +36,28 @@ public class MemoryBlocksGame {
     }
 
     public void checkMatch(MemoryBlock block) {
-        if (block == flippedBlock) {
+        if (nextToTheLast != null && last == null && block == nextToTheLast) {
             return;
         }
 
-        if (flippedBlock == null) {
-            flippedBlock = block;
-        } else {
-            if (flippedBlock.getValue() == block.getValue()) {
-                flippedBlock.setEnabled(false);
-                block.setEnabled(false);
-            } else {
-                // Delay a bit before unflipping the unmatched blocks
-                MemoryBlock t = flippedBlock;
-                Timer timer = new Timer(300, new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        t.unflip();
-                        block.unflip();
-                    }
-                });
-                timer.setRepeats(false);
-                timer.start();
+        if (nextToTheLast == null) {
+            nextToTheLast = block;
+        } else if (last == null) {
+            last = block;
+            if (nextToTheLast.getValue() == last.getValue()) {
+                last.setEnabled(false);
+                nextToTheLast.setEnabled(false);
+                nextToTheLast = null;
+                last = null;
             }
-            flippedBlock = null;
+        } else {
+            nextToTheLast.unflip();
+            last.unflip();
+            nextToTheLast = block;
+            nextToTheLast.flip();
+            last = null;
         }
+
     }
 
     public static void main(String[] args) {
@@ -74,8 +72,8 @@ public class MemoryBlocksGame {
                         public void actionPerformed(ActionEvent e) {
                             if (!block.isFlipped()) {
                                 block.flip();
-                                game.checkMatch(block);
                             }
+                            game.checkMatch(block);
                         }
                     });
                 }
