@@ -9,9 +9,15 @@ import java.util.List;
 public class MemoryBlocksGame {
     private JFrame frame;
     private JPanel gridPanel;
+    private JLabel timerLabel;
     private MemoryBlock last;
     private MemoryBlock nextToTheLast;
     private List<MemoryBlock> blocks;
+    private boolean firstClick;
+    private long startTime;
+    private Timer elapsedTimer;
+    private int matchedPairs;
+    private int totalPairs;
 
     public MemoryBlocksGame() {
         frame = new JFrame("Memory Blocks Game");
@@ -31,18 +37,45 @@ public class MemoryBlocksGame {
             gridPanel.add(block);
         }
 
-        frame.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.PAGE_END);
-
-        JLabel statusLine = new JLabel("Vrijeme: ", SwingConstants.LEADING);
-        statusLine.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        statusLine.setFont(new Font("Arial", Font.BOLD, 18));
-        frame.add(statusLine, BorderLayout.PAGE_END);
+        timerLabel = new JLabel("Vrijeme: 0 s");
+        timerLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        timerLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        frame.add(timerLabel, BorderLayout.SOUTH);
 
         frame.pack();
         frame.setVisible(true);
+
+        firstClick = false;
+        matchedPairs = 0;
+        totalPairs = blocks.size() / 2; // Calculate the total number of pairs
+
+        // Create a Timer to update the elapsed time label
+        elapsedTimer = new Timer(100, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateTimerLabel();
+            }
+        });
+    }
+
+    public void updateTimerLabel() {
+        long currentTime = System.nanoTime();
+        long elapsedTime = currentTime - startTime;
+        // 1 second = 1_000_000_000 nano seconds
+        double elapsedTimeInSecond = (double) elapsedTime / 1_000_000_000;
+        String labelText = String.format("Vrijeme: %.3f s", elapsedTimeInSecond);
+        timerLabel.setText(labelText);
     }
 
     public void checkMatch(MemoryBlock block) {
+        if (!firstClick) {
+            startTime = System.nanoTime();
+            firstClick = true;
+
+            // Start the elapsed timer
+            elapsedTimer.start();
+        }
+
         if (nextToTheLast != null && last == null && block == nextToTheLast) {
             return;
         }
@@ -56,6 +89,17 @@ public class MemoryBlocksGame {
                 nextToTheLast.setEnabled(false);
                 nextToTheLast = null;
                 last = null;
+
+                matchedPairs++;
+                if (matchedPairs == totalPairs) {
+                    elapsedTimer.stop();
+                    long currentTime = System.nanoTime();
+                    long elapsedTime = currentTime - startTime;
+                    // 1 second = 1_000_000_000 nano seconds
+                    double elapsedTimeInSecond = (double) elapsedTime / 1_000_000_000;
+                    String labelText = String.format("Vrijeme: %.3f s. Igra je završena.", elapsedTimeInSecond);
+                    timerLabel.setText(labelText);
+                }
             }
         } else {
             nextToTheLast.unflip();
@@ -64,7 +108,6 @@ public class MemoryBlocksGame {
             nextToTheLast.flip();
             last = null;
         }
-
     }
 
     public static void main(String[] args) {
