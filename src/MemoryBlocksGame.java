@@ -31,6 +31,13 @@ public class MemoryBlocksGame {
             gridPanel.add(block);
         }
 
+        frame.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.PAGE_END);
+
+        JLabel statusLine = new JLabel("Vrijeme: ", SwingConstants.LEADING);
+        statusLine.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        statusLine.setFont(new Font("Arial", Font.BOLD, 18));
+        frame.add(statusLine, BorderLayout.PAGE_END);
+
         frame.pack();
         frame.setVisible(true);
     }
