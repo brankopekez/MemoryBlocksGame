@@ -93,12 +93,8 @@ public class MemoryBlocksGame {
                 matchedPairs++;
                 if (matchedPairs == totalPairs) {
                     elapsedTimer.stop();
-                    long currentTime = System.nanoTime();
-                    long elapsedTime = currentTime - startTime;
-                    // 1 second = 1_000_000_000 nano seconds
-                    double elapsedTimeInSecond = (double) elapsedTime / 1_000_000_000;
-                    String labelText = String.format("Vrijeme: %.3f s. Igra je završena.", elapsedTimeInSecond);
-                    timerLabel.setText(labelText);
+                    updateTimerLabel();
+                    timerLabel.setText(timerLabel.getText() + ". Igra je završena.");
                 }
             }
         } else {
