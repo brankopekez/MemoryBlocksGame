@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="IgraMemorijskihKartica:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/IgraMemorijskihKartica_jar</output-path>
+    <root id="archive" name="IgraMemorijskihKartica.jar">
+      <element id="module-output" name="IgraMemorijskihKartica" />
+    </root>
+  </artifact>
+</component>
