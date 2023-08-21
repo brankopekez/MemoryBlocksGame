@@ -2,7 +2,7 @@
   <artifact type="jar" name="MemoryBlocksGame:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/MemoryBlocksGame_jar</output-path>
     <root id="archive" name="MemoryBlocksGame.jar">
-      <element id="module-output" name="MemoryBlocksGame" />
+      <element id="module-output" name="IgraMemorijskihKartica" />
     </root>
   </artifact>
 </component>
